@@ -5,6 +5,16 @@ from django.contrib.auth import login, logout, authenticate
 # Create your views here.
 
 
+def user_logout(requset):
+    logout(requset)
+
+    return redirect('login')
+
+
+def user_profile(request):
+    return render(request, 'user/profile.html')
+
+
 def user_login(request):
     message = ''
     if request.method == 'POST':
@@ -31,6 +41,7 @@ def user_login(request):
                 else:
                     login(request, user)
                     message = '登入成功'
+                    return redirect('profile')
 
     return render(request, 'user/login.html', {'message': message})
 
@@ -56,12 +67,14 @@ def user_register(request):
                 if User.objects.filter(username=username).exists():
                     message = '帳號重複'
                 else:
-                    User.objects.create_user(
-                        username=username, password=password1).save()
+                    user = User.objects.create_user(
+                        username=username, password=password1)
+                    user.save()
+                    login(request, user)
                     message = '註冊成功!'
+                    return redirect('profile')
                 # 　帳號重複檢查
         except Exception as e:
             print(e)
             message = '註冊失敗'
-
     return render(request, 'user/register.html', {'form': form, 'message': message})
