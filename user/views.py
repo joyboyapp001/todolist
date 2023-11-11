@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-# Create your views here.
 
 
 def user_logout(requset):
@@ -11,8 +10,14 @@ def user_logout(requset):
     return redirect('login')
 
 
-def user_profile(request):
-    return render(request, 'user/profile.html')
+def user_profile(requset, id):
+    user = None
+    try:
+        user = User.objects.get(pk=id)
+    except Exception as e:
+        print(e)
+
+    return render(requset, 'user/profile.html', {'user': user})
 
 
 def user_login(request):
@@ -25,25 +30,27 @@ def user_login(request):
         if request.POST.get('login'):
             username = request.POST.get('username')
             password = request.POST.get('password')
-
             if password == '' or username == '':
-                message = '帳密不能爲空'
+                message = '帳號跟密碼不能為空'
             else:
                 # 登入動作
                 user = authenticate(
                     request, username=username, password=password)
+                print(user)
                 if not user:
-                    # 篩選姓名
+                    # 篩選帳號
                     if User.objects.filter(username=username):
-                        message = '密碼錯誤'
+                        message = '密碼錯誤!'
                     else:
-                        message = '帳號有誤'
+                        message = '帳號錯誤!'
                 else:
                     login(request, user)
-                    message = '登入成功'
-                    return redirect('profile')
+                    message = '登入成功!'
+                    return redirect('todolist')
 
     return render(request, 'user/login.html', {'message': message})
+
+# Create your views here.
 
 
 def user_register(request):
@@ -72,9 +79,10 @@ def user_register(request):
                     user.save()
                     login(request, user)
                     message = '註冊成功!'
-                    return redirect('profile')
+                    return redirect('todolist')
                 # 　帳號重複檢查
         except Exception as e:
             print(e)
             message = '註冊失敗'
+
     return render(request, 'user/register.html', {'form': form, 'message': message})
