@@ -42,6 +42,9 @@
         Login:
         <a href="{% url 'profile' user.id %}">{{user.username}}</a>
         <a href="{% url 'logout' %}">登出</a>
+        <a href="{% url 'create-todo' %}">建立todo</a>
+        <a href="{% url 'completed-todolist' %}">已完成todo</a>
+
         {% else %}
         <a href="{% url 'login' %}">登入</a>
         <a href="{% url 'register' %}">註冊</a>

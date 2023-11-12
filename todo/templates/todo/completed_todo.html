@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}
-代辦事項頁面
+已完成事項頁面
 {% endblock %}
 {% block content %}
-<h1>TodoList</h1>
+<h1>Completed Todo</h1>
 {% for todo in todos %}
-{% if not todo.completed %}
+{% if todo.completed %}
 <li><span style="color:rgb(9, 9, 130)">[{{todo.created}}]</span>
     <a href="{% url 'todo' todo.id %}" style="color:black;text-decoration: underline;">
         {% if todo.completed %}
@@ -18,13 +18,6 @@
     <span style="color:red">重要!</span>
     {% endif %}
 </li>
-<form action="{% url 'delete-todo' todo.id %}" style="display: inline;">
-    <button type="submit" onclick="return confirm('是否刪除?')">刪除</button>
-</form>
-<form action="{% url 'completed-todo' todo.id %}" style="display: inline;">
-    <button type="submit">完成</button>
-</form>
-
 {% endif %}
 {% endfor %}
 {% endblock %}

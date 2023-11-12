@@ -4,14 +4,26 @@
 {% endblock %}
 {% block content %}
 {% if todo %}
-<h2>{{todo.title}}
+<h2 style="background-color: aquamarine;padding: 12px 6px;">{{todo.title}}
     {% if todo.important %}
     <span style="color:red">(重要)</span>
     {% endif %}
 </h2>
 <hr>
-<li>{{todo.text}}</li>
-<li>{{todo.created}}</li>
+<li style="white-space: pre-line;list-style-type: none;">{{todo.text}}</li>
+<li>建立時間:{{todo.created}}</li>
+<li>完成時間:
+    {% if todo.date_completed %}
+    {{todo.date_completed}}
+    {% endif %}
+</li>
+<hr>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="更新" name="update">
+    <input type="submit" value="刪除" name="delete" onclick="return confirm('確定刪除?')">
+</form>
 {% else %}
 無此代辦事項
 {% endif %}
